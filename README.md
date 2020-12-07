@@ -60,11 +60,11 @@ usage: jlreg [-v] [-h] {create|add}
 Manage a local Julia Registry from the command line.
 
 commands:
-  create         Create a new, empty Registry
-  add            Add a new version of a package in the Registry
+  create         Create and populate a local clone of a new, empty Registry
+  add            Publish a new version of a package in the Registry
 
 optional arguments:
-  -v, --verbose
+  -v, --verbose  Print informative messages at each step
   -h, --help     show this help message and exit
 ```
 

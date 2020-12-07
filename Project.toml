@@ -2,6 +2,7 @@ name = "RegistryCLI"
 uuid = "41fcc7e7-1908-4925-8240-7eafabf08a75"
 authors = ["François Févotte <francois.fevotte@triscale-innov.com>"]
 version = "0.1.0"
+license = "MIT"
 
 [deps]
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
@@ -12,3 +13,5 @@ Mustache = "ffc61752-8dc7-55ee-8c37-f3e9cdd09e70"
 [compat]
 ArgParse = "1.1"
 LocalRegistry = "0.3"
+Mustache = "1.0"
+julia = "1"
