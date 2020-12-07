@@ -1,0 +1,13 @@
+name = "RegistryCLI"
+uuid = "41fcc7e7-1908-4925-8240-7eafabf08a75"
+authors = ["François Févotte <francois.fevotte@triscale-innov.com>"]
+version = "0.1.0"
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+LibGit2 = "76f85450-5226-5b5a-8eaa-529ad045b433"
+LocalRegistry = "89398ba2-070a-4b16-a995-9893c55d93cf"
+
+[compat]
+ArgParse = "1.1"
+LocalRegistry = "0.3"
