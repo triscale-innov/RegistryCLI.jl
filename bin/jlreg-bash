@@ -1,0 +1,6 @@
+#!/bin/bash
+
+{{{:JULIA}}} {{{:FLAGS}}} \
+    --project="{{{:PROJECT}}}" \
+    -e "using RegistryCLI; RegistryCLI.main(ARGS)" \
+    -- "$@"

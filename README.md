@@ -7,17 +7,53 @@ actually performs all the registry bookkeeping.
 
 ## Installation
 
-Simply clone this repository, and instantiate the project environment:
-```
-$ git clone https://path/to/jlreg
-$ cd jlreg
-$ julia --project -e 'using Pkg; Pkg.instantiate()'
-```
+1. Install the `RegistryCLI` package from julia's package manager:
 
-For convenience, you might want to add the project directory to your path, so
-that you can call the `jlreg` command more easily:
+   ```
+   pkg> add RegistryCLI
+   ```
+   
+1. Install the command-line interface:
+
+   ```
+   julia> import RegistryCLI; RegistryCLI.install()
+   [ Info: Installed jlreg to `/home/francois/.julia/bin/jlreg`
+   ```
+
+    Optional arguments can be provided to fine-tune the behavior of
+    `RegistryCLI.install`. From the docstring:
+    
+   ```
+   help?> RegistryCLI.install
+     RegistryCLI.install(; kwargs)
+   
+     Install the jlreg script for use in a terminal.
+   
+     Keyword arguments:
+
+       •    julia: path to the julia executable. Defaults to the currently running julia.
+   
+       •    flags: command-line flags for julia. Defaults to --color=yes --startup-file=no --compile=min -O0.
+   
+       •    destdir: directory where to install the executable script. Should be writable and available in PATH. Defaults to ~/.julia.
+   
+       •    command: name of the executable script. Defaults to jlreg.
+   
+       •    perms: permissions of the executable script. Defaults to 0o755 (i.e. "-rwxr-xr-x").
+   
+       •    force: allow overwriting an existing file. Defaults to false.
+   ```
+
+1. Ensure that the script directory (`destdir` above, by default `~/.julia/bin`)
+   is available in the `PATH`. Add it if necessary:
+   
+   ```
+   shell$ export PATH=$PATH:$HOME/.julia/bin
+   ```
+
+## Usage
+
 ```
-$ PATH=$PATH:/path/to/jlreg
 $ jlreg --help
 usage: jlreg [-v] [-h] {create|add}
 
@@ -31,8 +67,6 @@ optional arguments:
   -v, --verbose
   -h, --help     show this help message and exit
 ```
-
-## Usage
 
 ### Create a private registry
 
@@ -75,8 +109,8 @@ optional arguments:
    $ jlreg add PACKAGE_URL
    ┌ Info: Registering package
    │   package_path = "/tmp/jl_EV3XPI/package"
-   │   registry_path = "REG_PATH"
    │   package_repo = "PACKAGE_URL"
+   │   registry_path = "REG_PATH"
    │   uuid = UUID("7876af07-990d-54b4-ab0e-23690620f79a")
    │   version = v"0.5.4"
    │   tree_hash = "837d87d3b25c237b06c6e468be3d147a242be7a8"
@@ -84,7 +118,7 @@ optional arguments:
    ```
 
 1. As always, a commit should have been added in the local registry
-   clone. Please check it carefully before pushing it to the "real" registry:
+   clone. Please inspect it carefully before pushing it to the "real" registry:
    ```
    $ git push origin master
    ```

@@ -1,4 +1,0 @@
-#!/bin/bash
-julia --color=yes --startup-file=no --compile=min -O0 \
-      -e "using RegistryCLI; RegistryCLI.main(ARGS)"  \
-      -- "$@"

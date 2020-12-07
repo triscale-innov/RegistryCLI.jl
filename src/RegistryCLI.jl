@@ -2,6 +2,7 @@ module RegistryCLI
 using ArgParse: ArgParse, ArgParseSettings, @add_arg_table!
 using LibGit2: LibGit2, GitRepo, GitRemote, GitCommit, GitHash, GitObject
 using LocalRegistry
+using Mustache
 
 # Create a new local Registry:
 #
@@ -141,6 +142,58 @@ end
 
 function main(clargs...)
     main(collect(clargs))
+end
+
+
+
+
+"""
+    RegistryCLI.install(; kwargs)
+
+Install the `jlreg` script for use in a terminal.
+
+*Keyword arguments:*
+- `julia`: path to the julia executable. Defaults to the currently running julia.
+- `flags`: command-line flags for julia. Defaults to `--color=yes --startup-file=no --compile=min -O0`.
+- `destdir`: directory where to install the executable script. Should be writable and available in PATH. Defaults to `~/.julia`.
+- `command`: name of the executable script. Defaults to `jlreg`.
+- `perms`: permissions of the executable script. Defaults to `0o755` (i.e. "-rwxr-xr-x").
+- `force`: allow overwriting an existing file. Defaults to `false`.
+"""
+function install(;
+                 julia::String   = first(Base.julia_cmd()),
+                 flags::String   = "--color=yes --startup-file=no --compile=min -O0",
+                 destdir::String = joinpath(first(DEPOT_PATH), "bin"),
+                 command::String = "jlreg",
+                 perms::Integer  = 0o755,
+                 force::Bool     = false,
+                 )
+    if Sys.iswindows()
+        @error "RegistryCLI does not (yet) support installing the command-line script on Windows systems."
+    end
+
+    destdir = abspath(expanduser(destdir))
+    script  = joinpath(destdir, command)
+    if ispath(script) && !force
+        @error("Refusing to overwrite existing file. Use `RegistryCLI.install(force=true)` to force overwriting.",
+               dest=script)
+        return
+    end
+
+    mkpath(destdir)
+    open(script, "w") do f
+        tmpl = Mustache.load(joinpath(@__DIR__, "..", "bin", "jlreg-bash"))
+        write(f, render(tmpl, Dict(
+            :JULIA   => julia,
+            :FLAGS   => flags,
+            :COMMAND => command,
+            :DESTDIR => destdir,
+            :PROJECT => joinpath(@__DIR__, ".."),
+        )))
+    end
+    chmod(script, perms)
+
+    @info "Installed Registry CLI to `$script`"
 end
 
 end # module
