@@ -87,7 +87,7 @@ function add(args)
         end
 
         verbose && @info "Registering new version in the registry"
-        LocalRegistry.register(path, pwd())
+        LocalRegistry.register(path, registry = pwd())
     end
 
     return 0

@@ -1,5 +1,5 @@
 using RegistryCLI: main
-using LibGit2
+using RegistryCLI.LibGit2
 using Test
 
 function grep(str, file)
@@ -23,13 +23,21 @@ end
         reg_path = joinpath(tmpdir, "registry_local")       # Path to local clone
 
         # Create git repo for the public Registry
-        LibGit2.init(#=path=# reg_url,
-                     #=bare=# true)
+        repo = LibGit2.init(#=path=# reg_url,
+                            #=bare=# true)
+        ENV["GIT_AUTHOR_NAME"] = "Test User"
+        ENV["GIT_AUTHOR_EMAIL"] = "user@example.net"
+        ENV["GIT_COMMITTER_NAME"] = "Test User"
+        ENV["GIT_COMMITTER_EMAIL"] = "user@example.net"
 
         # Initialize public Registry
         main("create", "--help")
         main("-v", "create", reg_url, reg_path,
              "--description", "Test registry")
+
+        cd(reg_path) do
+            run(`git push --set-upstream origin master`)
+        end
 
         @test isfile(joinpath(reg_path, "Registry.toml"))
         @test count_commits(reg_path) == 1
